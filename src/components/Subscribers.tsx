@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Input, message } from 'antd';
 import { service, Subscription, PingResult } from '../service';
+import { ColumnsType } from 'antd/es/table';
 
 interface TableData {
   key: string;
@@ -112,7 +113,7 @@ const Subscribers: React.FC = () => {
     }
   }, []);
 
-  const columns = [
+  const columns: ColumnsType<TableData> = [
     {
       title: 'URL',
       key: 'url',
@@ -132,6 +133,7 @@ const Subscribers: React.FC = () => {
     {
       title: '操作',
       key: 'action',
+      fixed: 'right',
       render: (text: any, record: TableData) => (
         <>
           {record.isProtocol ? (
@@ -144,6 +146,10 @@ const Subscribers: React.FC = () => {
           )}
         </>
       ),
+    },
+    {
+      title: '',
+      key: 'spacer',
     },
   ];
 
@@ -166,6 +172,7 @@ const Subscribers: React.FC = () => {
         columns={columns}
         style={{ marginTop: 16 }}
         expandable={{ defaultExpandAllRows: true }}
+        scroll={{ x: 'max-content' }}
       />
     </div>
   );

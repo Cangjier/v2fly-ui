@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Layout, Menu } from 'antd';
 import Subscribers from './components/Subscribers';
-import ProxySelection from './components/ProxySelection';
 import ProxyConfig from './components/ProxyConfig';
 
 const { Header, Sider, Content } = Layout;
@@ -13,8 +12,6 @@ function App() {
     switch (selectedKey) {
       case 'subscribers':
         return <Subscribers />;
-      case 'proxySelection':
-        return <ProxySelection />;
       case 'proxyConfig':
         return <ProxyConfig />;
       default:
@@ -32,12 +29,11 @@ function App() {
           onSelect={({ key }) => setSelectedKey(key)}
         >
           <Menu.Item key="subscribers">订阅者管理</Menu.Item>
-          <Menu.Item key="proxySelection">代理选择</Menu.Item>
           <Menu.Item key="proxyConfig">代理配置</Menu.Item>
         </Menu>
       </Sider>
       <Layout>
-        <Content style={{ margin: '16px' }}>
+        <Content style={{ margin: '16px', overflowY: 'auto' }}>
           {renderContent()}
         </Content>
       </Layout>
