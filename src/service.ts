@@ -33,32 +33,34 @@ const getSubscribers = async (): Promise<Subscription[]> => {
 };
 
 const addSubscribers = async (subscribers: string[]): Promise<void> => {
-    const response = await apiClient.post('/add_subscribers', subscribers);
+    const response = await apiClient.post('/add_subscribers', {
+        subscribers
+    });
     const result: WebMessage = response.data;
     if (!result.success) throw new Error(result.message);
 };
 
 const removeSubscribers = async (subscribers: string[]): Promise<void> => {
-    const response = await apiClient.post('/remove_subscribers', subscribers);
+    const response = await apiClient.post('/remove_subscribers', {subscribers});
     const result: WebMessage = response.data;
     if (!result.success) throw new Error(result.message);
 };
 
 const updateSubscribers = async (subscribers: string[]): Promise<Subscription[]> => {
-    const response = await apiClient.post('/update_subscribers', subscribers);
+    const response = await apiClient.post('/update_subscribers', {subscribers});
     const result: WebMessage = response.data;
     if (!result.success) throw new Error(result.message);
     return result.data;
 };
 
 const switchToProtocolUrl = async (protocolUrl: string): Promise<void> => {
-    const response = await apiClient.post('/switch_to_protocol_url', protocolUrl);
+    const response = await apiClient.post('/switch_to_protocol_url', {protocolUrl});
     const result: WebMessage = response.data;
     if (!result.success) throw new Error(result.message);
 };
 
 const ping = async (protocolUrls: string[]): Promise<PingResult[]> => {
-    const response = await apiClient.post('/ping', protocolUrls);
+    const response = await apiClient.post('/ping', {protocolUrls});
     const result: WebMessage = response.data;
     if (!result.success) throw new Error(result.message);
     return result.data;
@@ -85,7 +87,7 @@ const getConfig = async (): Promise<VPNConfig> => {
 };
 
 const setConfig = async (config: VPNConfig): Promise<void> => {
-    const response = await apiClient.post('/set_config', config);
+    const response = await apiClient.post('/set_config', {config});
     const result: WebMessage = response.data;
     if (!result.success) throw new Error(result.message);
 };
