@@ -127,7 +127,7 @@ const Subscribers: React.FC = () => {
       title: 'Ping',
       key: 'ping',
       dataIndex: 'ping',
-      render: (ping: number) => (ping !== undefined ? `${ping} ms` : '未 Ping'),
+      render: (ping: number) => (ping !== undefined ? `${ping} ms` : '?'),
     },
     {
       title: '操作',
@@ -161,22 +161,11 @@ const Subscribers: React.FC = () => {
         />
         <Button type="primary" onClick={handleAddSubscriber}>添加订阅者</Button>
       </div>
-      <div style={{ marginBottom: 16 }}>
-        {lastPingTime ? `上次 Ping 时间: ${lastPingTime}` : '还没有 Ping 过哦'}
-      </div>
       <Table
         dataSource={subscribers}
         columns={columns}
         style={{ marginTop: 16 }}
-        expandable={{
-          expandedRowRender: record => (
-            <Table
-              dataSource={record.children}
-              columns={columns}
-              pagination={false}
-            />
-          ),
-        }}
+        expandable={{ defaultExpandAllRows: true }}
       />
     </div>
   );
