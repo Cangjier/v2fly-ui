@@ -37,7 +37,6 @@ function App() {
         </Menu>
       </Sider>
       <Layout>
-        <Header style={{ background: '#fff', padding: 0 }} />
         <Content style={{ margin: '16px' }}>
           {renderContent()}
         </Content>

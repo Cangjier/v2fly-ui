@@ -38,8 +38,16 @@ const Subscribers: React.FC = () => {
   const columns = [
     {
       title: 'URL',
-      dataIndex: 'url',
       key: 'url',
+      render: (text: any, record: Subscription) => (
+        <a
+          href={record.url}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {record.url}
+        </a>
+      ),
     },
     {
       title: '操作',
