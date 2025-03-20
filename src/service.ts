@@ -15,7 +15,7 @@ export interface VPNConfig {
 }
 
 const apiClient = axios.create({
-    baseURL: '/api/v1',
+    baseURL: 'http://124.71.207.90:7898/api/v1',
     timeout: 10000,
 });
 
