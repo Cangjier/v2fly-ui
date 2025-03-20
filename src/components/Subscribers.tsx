@@ -75,7 +75,7 @@ const Subscribers: React.FC = () => {
         />
         <Button type="primary" onClick={handleAddSubscriber}>添加订阅者</Button>
       </div>
-      <Table dataSource={subscribers} columns={columns} rowKey="url" style={{ marginTop: 16 }} />
+      {/* <Table dataSource={subscribers} columns={columns} rowKey="url" style={{ marginTop: 16 }} /> */}
     </div>
   );
 };
