@@ -8,7 +8,8 @@ const Subscribers: React.FC = () => {
   const fetchSubscribers = async () => {
     try {
       const data = await service.getSubscribers();
-      setSubscribers(data);
+      console.log(data);
+      setSubscribers(data ?? []);
     } catch (error) {
       message.error('获取订阅者失败');
     }
@@ -75,7 +76,7 @@ const Subscribers: React.FC = () => {
         />
         <Button type="primary" onClick={handleAddSubscriber}>添加订阅者</Button>
       </div>
-      {/* <Table dataSource={subscribers} columns={columns} rowKey="url" style={{ marginTop: 16 }} /> */}
+      <Table dataSource={subscribers} columns={columns} style={{ marginTop: 16 }} />
     </div>
   );
 };
