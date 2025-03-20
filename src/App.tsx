@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Layout, Menu } from 'antd';
-import './App.css'
 import Subscribers from './components/Subscribers';
 import ProxySelection from './components/ProxySelection';
 import ProxyConfig from './components/ProxyConfig';
