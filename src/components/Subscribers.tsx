@@ -5,11 +5,6 @@ import { service, Subscription } from '../service';
 const Subscribers: React.FC = () => {
   const [subscribers, setSubscribers] = useState<Subscription[]>([]);
   const [newSubscriber, setNewSubscriber] = useState('');
-
-  useEffect(() => {
-    fetchSubscribers();
-  }, []);
-
   const fetchSubscribers = async () => {
     try {
       const data = await service.getSubscribers();
@@ -18,7 +13,6 @@ const Subscribers: React.FC = () => {
       message.error('获取订阅者失败');
     }
   };
-
   const handleAddSubscriber = async () => {
     try {
       await service.addSubscribers([newSubscriber]);
@@ -29,6 +23,7 @@ const Subscribers: React.FC = () => {
       message.error('添加订阅者失败');
     }
   };
+
 
   const handleRemoveSubscriber = async (url: string) => {
     try {
@@ -54,16 +49,24 @@ const Subscribers: React.FC = () => {
       ),
     },
   ];
+  useEffect(() => {
+    fetchSubscribers();
+  }, []);
 
   return (
     <div>
-      <Input
-        value={newSubscriber}
-        onChange={(e) => setNewSubscriber(e.target.value)}
-        placeholder="输入新的订阅者 URL"
-        style={{ width: 300, marginRight: 8 }}
-      />
-      <Button type="primary" onClick={handleAddSubscriber}>添加订阅者</Button>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+      }}>
+        <Input
+          value={newSubscriber}
+          onChange={(e) => setNewSubscriber(e.target.value)}
+          placeholder="输入新的订阅者 URL"
+          style={{ width: 300, marginRight: 8 }}
+        />
+        <Button type="primary" onClick={handleAddSubscriber}>添加订阅者</Button>
+      </div>
       <Table dataSource={subscribers} columns={columns} rowKey="url" style={{ marginTop: 16 }} />
     </div>
   );

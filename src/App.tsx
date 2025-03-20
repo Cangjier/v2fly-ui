@@ -40,7 +40,7 @@ function App() {
       <Layout>
         <Header style={{ background: '#fff', padding: 0 }} />
         <Content style={{ margin: '16px' }}>
-          {/* {renderContent()} */}
+          {renderContent()}
         </Content>
       </Layout>
     </Layout>
