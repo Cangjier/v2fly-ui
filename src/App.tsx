@@ -1,34 +1,50 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Layout, Menu } from 'antd';
+import 'antd/dist/antd.css';
 import './App.css'
+import Subscribers from './components/Subscribers';
+import ProxySelection from './components/ProxySelection';
+import ProxyConfig from './components/ProxyConfig';
+
+const { Header, Sider, Content } = Layout;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedKey, setSelectedKey] = useState('subscribers');
+
+  const renderContent = () => {
+    switch (selectedKey) {
+      case 'subscribers':
+        return <Subscribers />;
+      case 'proxySelection':
+        return <ProxySelection />;
+      case 'proxyConfig':
+        return <ProxyConfig />;
+      default:
+        return <Subscribers />;
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Sider>
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={['subscribers']}
+          onSelect={({ key }) => setSelectedKey(key)}
+        >
+          <Menu.Item key="subscribers">订阅者管理</Menu.Item>
+          <Menu.Item key="proxySelection">代理选择</Menu.Item>
+          <Menu.Item key="proxyConfig">代理配置</Menu.Item>
+        </Menu>
+      </Sider>
+      <Layout>
+        <Header style={{ background: '#fff', padding: 0 }} />
+        <Content style={{ margin: '16px' }}>
+          {renderContent()}
+        </Content>
+      </Layout>
+    </Layout>
   )
 }
 
