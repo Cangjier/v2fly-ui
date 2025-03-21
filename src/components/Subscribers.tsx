@@ -11,6 +11,14 @@ interface TableData {
   children?: TableData[];
 }
 
+const decodeUrl = (url: string) => {
+  const hashIndex = url.indexOf('#');
+  if (hashIndex !== -1) {
+    return decodeURIComponent(url.substring(hashIndex + 1));
+  }
+  return url;
+};
+
 const Subscribers: React.FC = () => {
   const [subscribers, setSubscribers] = useState<TableData[]>([]);
   const [newSubscriber, setNewSubscriber] = useState('');
@@ -118,22 +126,23 @@ const Subscribers: React.FC = () => {
       title: 'URL',
       key: 'url',
       dataIndex: 'url',
+      width: 300,
       render: (url: string) => (
-        <a href={url} target="_blank" rel="noreferrer">
-          {url}
-        </a>
+        <div>{decodeUrl(url)}</div>
       ),
     },
     {
       title: 'Ping',
       key: 'ping',
       dataIndex: 'ping',
+      width: 100,
       render: (ping: number) => (ping !== undefined ? `${ping} ms` : '?'),
     },
     {
       title: '操作',
       key: 'action',
       fixed: 'right',
+      width: 200,
       render: (text: any, record: TableData) => (
         <>
           {record.isProtocol ? (
