@@ -104,23 +104,26 @@ const Subscribers: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchSubscribers();
-    const storedPingResults = localStorage.getItem('pingResults');
-    const storedLastPingTime = localStorage.getItem('lastPingTime');
-    if (storedPingResults) {
-      const pingResults = JSON.parse(storedPingResults);
-      setSubscribers(prevSubscribers => prevSubscribers.map(sub => ({
-        ...sub,
-        ping: undefined,
-        children: sub.children?.map(child => ({
-          ...child,
-          ping: pingResults[child.url]
-        }))
-      })));
-    }
-    if (storedLastPingTime) {
-      setLastPingTime(storedLastPingTime);
-    }
+    let func = async () => {
+      await fetchSubscribers();
+      const storedPingResults = localStorage.getItem('pingResults');
+      const storedLastPingTime = localStorage.getItem('lastPingTime');
+      if (storedPingResults) {
+        const pingResults = JSON.parse(storedPingResults);
+        setSubscribers(prevSubscribers => prevSubscribers.map(sub => ({
+          ...sub,
+          ping: undefined,
+          children: sub.children?.map(child => ({
+            ...child,
+            ping: pingResults[child.url]
+          }))
+        })));
+      }
+      if (storedLastPingTime) {
+        setLastPingTime(storedLastPingTime);
+      }
+    };
+    func();
   }, []);
 
   const columns: ColumnsType<TableData> = [
