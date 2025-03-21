@@ -24,6 +24,7 @@ const Subscribers: React.FC = () => {
   const [newSubscriber, setNewSubscriber] = useState('');
   const [lastPingTime, setLastPingTime] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [currentProtocolUrl, setCurrentProtocolUrl] = useState<string | null>(null);
 
   const fetchSubscribers = async () => {
     try {
@@ -107,6 +108,16 @@ const Subscribers: React.FC = () => {
     }
   };
 
+  const handleSwitchProtocol = async (protocolUrl: string) => {
+    try {
+      await service.switchToProtocolUrl(protocolUrl);
+      setCurrentProtocolUrl(protocolUrl);
+      message.success('切换协议地址成功');
+    } catch (error) {
+      message.error('切换协议地址失败');
+    }
+  };
+
   useEffect(() => {
     let func = async () => {
       await fetchSubscribers();
@@ -126,6 +137,8 @@ const Subscribers: React.FC = () => {
       if (storedLastPingTime) {
         setLastPingTime(storedLastPingTime);
       }
+      const currentProtocol = await service.getCurrentProtocolUrl();
+      setCurrentProtocolUrl(currentProtocol);
     };
     func();
   }, []);
@@ -136,8 +149,10 @@ const Subscribers: React.FC = () => {
       key: 'url',
       dataIndex: 'url',
       width: 600,
-      render: (url: string) => (
-        <div>{decodeUrl(url)}</div>
+      render: (url: string, record: TableData) => (
+        <div style={{
+          fontWeight: currentProtocolUrl === record.url ? 'bold' : 'normal'
+        }}>{decodeUrl(url)}</div>
       ),
     },
     {
@@ -160,11 +175,14 @@ const Subscribers: React.FC = () => {
       render: (text: any, record: TableData) => (
         <>
           {record.isProtocol ? (
-            <Button onClick={() => handlePing([record.url])} style={{ marginRight: 8 }}>Ping</Button>
+            <>
+              <Button onClick={() => handlePing([record.url])} style={{ marginRight: 8 }}>Ping</Button>
+              <Button onClick={() => handleSwitchProtocol(record.url)} style={{ marginRight: 8 }}>切换</Button>
+            </>
           ) : (
             <>
-              <Button onClick={() => handleUpdateSubscriber(record.url)} style={{ marginRight: 8 }}>更新</Button>
               <Button onClick={() => handlePing(record.children?.map(child => child.url) || [])}>Ping</Button>
+              <Button onClick={() => handleUpdateSubscriber(record.url)} style={{ marginRight: 8 }}>更新</Button>
             </>
           )}
         </>
