@@ -21,7 +21,7 @@ export interface WebMessage {
 }
 
 const apiClient = axios.create({
-    baseURL: 'http://124.71.207.90:7898/api/v1',
+    baseURL: '/api/v1',
     timeout: 10000,
 });
 
