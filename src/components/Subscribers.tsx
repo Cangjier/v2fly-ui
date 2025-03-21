@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, message } from 'antd';
+import { Table, Button, Input, message, Spin } from 'antd';
 import { service, Subscription, PingResult } from '../service';
 import { ColumnsType } from 'antd/es/table';
 
@@ -23,6 +23,7 @@ const Subscribers: React.FC = () => {
   const [subscribers, setSubscribers] = useState<TableData[]>([]);
   const [newSubscriber, setNewSubscriber] = useState('');
   const [lastPingTime, setLastPingTime] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchSubscribers = async () => {
     try {
@@ -79,6 +80,7 @@ const Subscribers: React.FC = () => {
   };
 
   const handlePing = async (urls: string[]) => {
+    setLoading(true);
     try {
       const pingResults = await service.ping(urls);
       const storedPingResults = JSON.parse(localStorage.getItem('pingResults') || '{}');
@@ -100,6 +102,8 @@ const Subscribers: React.FC = () => {
       message.success('Ping 成功');
     } catch (error) {
       message.error('Ping 失败');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -186,13 +190,15 @@ const Subscribers: React.FC = () => {
         />
         <Button type="primary" onClick={handleAddSubscriber}>添加订阅者</Button>
       </div>
-      <Table
-        dataSource={subscribers}
-        columns={columns}
-        style={{ marginTop: 16 }}
-        expandable={{ defaultExpandAllRows: true }}
-        scroll={{ x: 'max-content' }}
-      />
+      <Spin spinning={loading}>
+        <Table
+          dataSource={subscribers}
+          columns={columns}
+          style={{ marginTop: 16 }}
+          expandable={{ defaultExpandAllRows: true }}
+          scroll={{ x: 'max-content' }}
+        />
+      </Spin>
     </div>
   );
 };
