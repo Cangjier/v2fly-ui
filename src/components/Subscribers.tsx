@@ -81,18 +81,21 @@ const Subscribers: React.FC = () => {
   const handlePing = async (urls: string[]) => {
     try {
       const pingResults = await service.ping(urls);
-      const pingMap = new Map(pingResults.map(result => [result.protocolUrl, result.ping]));
+      const storedPingResults = JSON.parse(localStorage.getItem('pingResults') || '{}');
+      pingResults.forEach(result => {
+        storedPingResults[result.protocolUrl] = result.ping;
+      });
       setSubscribers(prevSubscribers => prevSubscribers.map(sub => ({
         ...sub,
-        ping: pingMap.get(sub.url),
+        ping: undefined,
         children: sub.children?.map(child => ({
           ...child,
-          ping: pingMap.get(child.url)
+          ping: storedPingResults[child.url] ?? undefined
         }))
       })));
       const now = new Date().toLocaleString();
       setLastPingTime(now);
-      localStorage.setItem('pingResults', JSON.stringify(pingResults));
+      localStorage.setItem('pingResults', JSON.stringify(storedPingResults));
       localStorage.setItem('lastPingTime', now);
       message.success('Ping 成功');
     } catch (error) {
@@ -105,14 +108,13 @@ const Subscribers: React.FC = () => {
     const storedPingResults = localStorage.getItem('pingResults');
     const storedLastPingTime = localStorage.getItem('lastPingTime');
     if (storedPingResults) {
-      const pingResults: PingResult[] = JSON.parse(storedPingResults);
-      const pingMap = new Map(pingResults.map(result => [result.protocolUrl, result.ping]));
+      const pingResults = JSON.parse(storedPingResults);
       setSubscribers(prevSubscribers => prevSubscribers.map(sub => ({
         ...sub,
-        ping: pingMap.get(sub.url),
+        ping: undefined,
         children: sub.children?.map(child => ({
           ...child,
-          ping: pingMap.get(child.url)
+          ping: pingResults[child.url]
         }))
       })));
     }
@@ -126,7 +128,7 @@ const Subscribers: React.FC = () => {
       title: 'URL',
       key: 'url',
       dataIndex: 'url',
-      width: 300,
+      width: 600,
       render: (url: string) => (
         <div>{decodeUrl(url)}</div>
       ),
@@ -136,7 +138,12 @@ const Subscribers: React.FC = () => {
       key: 'ping',
       dataIndex: 'ping',
       width: 100,
-      render: (ping: number) => (ping !== undefined ? `${ping} ms` : '?'),
+      render: (ping: number, record: TableData) => {
+        if (record.isProtocol) {
+          return ping !== undefined ? `${ping} ms` : '?'
+        }
+        return ''
+      },
     },
     {
       title: '操作',
