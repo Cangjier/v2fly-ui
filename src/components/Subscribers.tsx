@@ -63,6 +63,7 @@ const Subscribers: React.FC = () => {
   };
 
   const handleUpdateSubscriber = async (url: string) => {
+    setLoading(true);
     try {
       const updatedSubscribers = await service.updateSubscribers([url]);
       const updatedTableData = updatedSubscribers.map((sub, index) => ({
@@ -77,6 +78,8 @@ const Subscribers: React.FC = () => {
       message.success('更新订阅者成功');
     } catch (error) {
       message.error('更新订阅者失败');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -181,7 +184,7 @@ const Subscribers: React.FC = () => {
             </>
           ) : (
             <>
-              <Button onClick={() => handlePing(record.children?.map(child => child.url) || [])}>Ping</Button>
+              <Button onClick={() => handlePing(record.children?.map(child => child.url) || [])} style={{ marginRight: 8 }}>Ping</Button>
               <Button onClick={() => handleUpdateSubscriber(record.url)} style={{ marginRight: 8 }}>更新</Button>
             </>
           )}
