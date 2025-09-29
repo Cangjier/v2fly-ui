@@ -204,7 +204,7 @@ const Subscribers: React.FC = () => {
       title: '操作',
       key: 'action',
       fixed: 'right',
-      width: 200,
+      width: 400,
       render: (text: any, record: TableData) => (
         <>
           {record.isProtocol ? (
