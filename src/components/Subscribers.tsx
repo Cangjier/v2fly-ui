@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Input, message, Spin } from 'antd';
 import { service, Subscription, PingResult } from '../service';
 import { ColumnsType } from 'antd/es/table';
+import { useModal } from '../utils';
 
 interface TableData {
   key: string;
@@ -20,6 +21,7 @@ const decodeUrl = (url: string) => {
 };
 
 const Subscribers: React.FC = () => {
+  const { showModal, modalContainer } = useModal();
   const [subscribers, setSubscribers] = useState<TableData[]>([]);
   const [newSubscriber, setNewSubscriber] = useState('');
   const [lastPingTime, setLastPingTime] = useState<string | null>(null);
@@ -80,6 +82,34 @@ const Subscribers: React.FC = () => {
       message.error('更新订阅者失败');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUpdateSubscriberByBase64Content = async (url: string) => {
+    try {
+      let base64ContentResult = '';
+      let accept = await showModal(() => {
+        const [base64Content, setBase64Content] = useState('');
+        useEffect(() => {
+          base64ContentResult = base64Content;
+        }, [base64Content]);
+        return <Input type="text" placeholder="请输入Base64内容" value={base64Content} onChange={(e) => setBase64Content(e.target.value)} />;
+      });
+      if (accept) {
+        await service.updateSubscriberByBase64Content(url, base64ContentResult);
+      }
+      message.success('更新订阅者成功');
+    } catch (error) {
+      message.error('更新订阅者失败');
+    }
+  };
+
+  const handleRemoveSubscriber = async (url: string) => {
+    try {
+      await service.removeSubscribers([url]);
+      message.success('删除订阅者成功');
+    } catch (error) {
+      message.error('删除订阅者失败');
     }
   };
 
@@ -186,6 +216,8 @@ const Subscribers: React.FC = () => {
             <>
               <Button onClick={() => handlePing(record.children?.map(child => child.url) || [])} style={{ marginRight: 8 }}>Ping</Button>
               <Button onClick={() => handleUpdateSubscriber(record.url)} style={{ marginRight: 8 }}>更新</Button>
+              <Button onClick={() => handleUpdateSubscriberByBase64Content(record.url)} style={{ marginRight: 8 }}>更新Base64</Button>
+              <Button onClick={() => handleRemoveSubscriber(record.url)} style={{ marginRight: 8 }}>删除</Button>
             </>
           )}
         </>
@@ -199,6 +231,7 @@ const Subscribers: React.FC = () => {
 
   return (
     <div>
+      {modalContainer}
       <div style={{
         display: 'flex',
         alignItems: 'center',

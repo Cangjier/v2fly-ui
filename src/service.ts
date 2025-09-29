@@ -98,6 +98,12 @@ const restart = async (): Promise<void> => {
     if (!result.success) throw new Error(result.message);
 };
 
+const updateSubscriberByBase64Content = async (url: string, base64Content: string): Promise<void> => {
+    const response = await apiClient.post('/update_subscriber_by_base64_content', {url, base64Content});
+    const result: WebMessage = response.data;
+    if (!result.success) throw new Error(result.message);
+};
+
 export const service = {
     getSubscribers,
     addSubscribers,
@@ -109,5 +115,6 @@ export const service = {
     getCurrentProtocolUrl,
     getConfig,
     setConfig,
-    restart
+    restart,
+    updateSubscriberByBase64Content
 };
