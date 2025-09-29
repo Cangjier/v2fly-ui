@@ -93,7 +93,11 @@ const Subscribers: React.FC = () => {
         useEffect(() => {
           base64ContentResult = base64Content;
         }, [base64Content]);
-        return <Input type="text" placeholder="请输入Base64内容" value={base64Content} onChange={(e) => setBase64Content(e.target.value)} />;
+        return <Input.TextArea rows={10} placeholder="请输入Base64内容" value={base64Content} onChange={(e) => setBase64Content(e.target.value)} />;
+      }, {
+        contentStyles: {
+          padding: "40px 10px 10px 10px"
+        }
       });
       if (accept) {
         await service.updateSubscriberByBase64Content(url, base64ContentResult);
@@ -204,7 +208,6 @@ const Subscribers: React.FC = () => {
       title: '操作',
       key: 'action',
       fixed: 'right',
-      width: 400,
       render: (text: any, record: TableData) => (
         <>
           {record.isProtocol ? (
@@ -216,7 +219,7 @@ const Subscribers: React.FC = () => {
             <>
               <Button onClick={() => handlePing(record.children?.map(child => child.url) || [])} style={{ marginRight: 8 }}>Ping</Button>
               <Button onClick={() => handleUpdateSubscriber(record.url)} style={{ marginRight: 8 }}>更新</Button>
-              <Button onClick={() => handleUpdateSubscriberByBase64Content(record.url)} style={{ marginRight: 8 }}>更新Base64</Button>
+              <Button onClick={() => handleUpdateSubscriberByBase64Content(record.url)} style={{ marginRight: 8 }}>Base64</Button>
               <Button onClick={() => handleRemoveSubscriber(record.url)} style={{ marginRight: 8 }}>删除</Button>
             </>
           )}
