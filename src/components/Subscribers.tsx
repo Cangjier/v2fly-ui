@@ -17,6 +17,22 @@ const decodeUrl = (url: string) => {
   if (hashIndex !== -1) {
     return decodeURIComponent(url.substring(hashIndex + 1));
   }
+  else if (url.startsWith("vmess://")) {
+    let base64 = url.substring("vmess://".length);
+    let json = JSON.parse(atob(base64));
+    if (json.ps) {
+      return json.ps;
+    }
+    else if (json.psn) {
+      return json.psn;
+    }
+    else if (json.psv) {
+      return json.psv;
+    }
+    else {
+      return url;
+    }
+  }
   return url;
 };
 
