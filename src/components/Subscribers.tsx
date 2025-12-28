@@ -84,14 +84,13 @@ const Subscribers: React.FC = () => {
     setLoading(true);
     try {
       const updatedSubscribers = await service.updateSubscribers([url]);
-      const updatedTableData = updatedSubscribers.map((sub, index) => ({
-        key: `${index}`,
-        url: sub.url,
-        children: sub.protocolUrls.map((url, idx) => ({ key: `${index}-${idx}`, url, isProtocol: true })),
-      }));
-      setSubscribers((prevSubscribers) => {
-        const updatedMap = new Map(updatedTableData.map(item => [item.url, item]));
-        return prevSubscribers.map(item => updatedMap.get(item.url) || item);
+      setSubscribers(old => {
+        let target = old.find(item => item.url === url);
+        let targetIndex = old.findIndex(item => item.url === url);
+        if (target) {
+          target.children = updatedSubscribers[0].protocolUrls.map((url, idx) => ({ key: `${targetIndex}-${idx}`, url, isProtocol: true }));
+        }
+        return old;
       });
       message.success('更新订阅者成功');
     } catch (error) {
