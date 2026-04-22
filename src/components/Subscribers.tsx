@@ -136,19 +136,25 @@ const Subscribers: React.FC = () => {
   const handlePing = async (urls: string[]) => {
     setLoading(true);
     try {
-      const pingResults = await service.ping(urls);
       const storedPingResults = JSON.parse(localStorage.getItem('pingResults') || '{}');
-      pingResults.forEach(result => {
-        storedPingResults[result.protocolUrl] = result.ping;
-      });
-      setSubscribers(prevSubscribers => prevSubscribers.map(sub => ({
-        ...sub,
-        ping: undefined,
-        children: sub.children?.map(child => ({
-          ...child,
-          ping: storedPingResults[child.url] ?? undefined
-        }))
-      })));
+      for (let i = 0; i < urls.length; i += 5) {
+        const batchUrls = urls.slice(i, i + 5);
+        const pingResults = await service.ping(batchUrls);
+
+        pingResults.forEach(result => {
+          storedPingResults[result.protocolUrl] = result.ping;
+        });
+        setSubscribers(prevSubscribers => prevSubscribers.map(sub => ({
+          ...sub,
+          ping: undefined,
+          children: sub.children?.map(child => ({
+            ...child,
+            ping: storedPingResults[child.url] ?? undefined
+          }))
+        })));
+      }
+
+
       const now = new Date().toLocaleString();
       setLastPingTime(now);
       localStorage.setItem('pingResults', JSON.stringify(storedPingResults));
