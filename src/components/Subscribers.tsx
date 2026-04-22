@@ -126,6 +126,7 @@ const Subscribers: React.FC = () => {
   const handleRemoveSubscriber = async (url: string) => {
     try {
       await service.removeSubscribers([url]);
+      setSubscribers(prevSubscribers => prevSubscribers.filter(sub => sub.url !== url));
       message.success('删除订阅者成功');
     } catch (error) {
       message.error('删除订阅者失败');
