@@ -169,6 +169,11 @@ const Subscribers: React.FC = () => {
       message.error('切换协议地址失败');
     }
   };
+  const handleCopyProtocolUrl = async (protocolUrl: string) => {
+    await showModal(self => {
+      return <Input.TextArea rows={10} value={protocolUrl} />;
+    });
+  };
 
   useEffect(() => {
     let func = async () => {
@@ -229,6 +234,7 @@ const Subscribers: React.FC = () => {
             <>
               <Button onClick={() => handlePing([record.url])} style={{ marginRight: 8 }}>Ping</Button>
               <Button onClick={() => handleSwitchProtocol(record.url)} style={{ marginRight: 8 }}>切换</Button>
+              <Button onClick={() => handleCopyProtocolUrl(record.url)} style={{ marginRight: 8 }}>复制</Button>
             </>
           ) : (
             <>
