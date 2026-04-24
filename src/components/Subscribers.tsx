@@ -137,8 +137,9 @@ const Subscribers: React.FC = () => {
     setLoading(true);
     try {
       const storedPingResults = JSON.parse(localStorage.getItem('pingResults') || '{}');
-      for (let i = 0; i < urls.length; i += 5) {
-        const batchUrls = urls.slice(i, i + 5);
+      let step = urls.length;
+      for (let i = 0; i < urls.length; i += step) {
+        const batchUrls = urls.slice(i, i + step);
         const pingResults = await service.ping(batchUrls);
 
         pingResults.forEach(result => {
